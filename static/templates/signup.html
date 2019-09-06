@@ -1,0 +1,35 @@
+<div class="container-fluid" ng-controller="UserCtrl" xmlns="http://www.w3.org/1999/html">
+    <div class="content-box-vertical">
+        <h2>注册</h2>
+        <form name="form " ng-submit="register(user)" role="form">
+            <div class="form-group"
+                 ng-class="{ 'has-error': form.username.$dirty && form.username.$error.required }">
+                <div class="col-sm-8 offset-sm-2">
+                    <input type="text" name="username" id="username" class="form-control" placeholder="请输入手机号"
+                           ng-model="user.username" required/>
+                    <span ng-show="form.username.$dirty && form.username.$error.required" class="help-block">Username is required</span>
+                </div>
+            </div>
+
+            <div class="form-group"
+                 ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
+                <div class="col-sm-8 offset-sm-2">
+                    <input type="password" name="password" id="password"
+                           placeholder="设置登录密码，不少于6位" class="form-control"
+                           ng-model="user.pass" required/>
+                    <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
+                </div>
+            </div>
+            <div class="form-actions" style="display: flex; justify-content: space-between; ">
+                <div class="col-sm-8 offset-sm-2">
+                    <button type="submit" ng-disabled="form.$invalid || vm.dataLoading" class="btn btn-primary">注册
+                    </button>
+                    <a href="#!/login" class="btn btn-link">取消</a>
+                </div>
+            </div>
+        </form>
+        <div class="col-sm-8 offset-sm-2">
+            <div ng-if="res" class="alert alert-danger"><span ng-bind="res"></span></div>
+        </div>
+    </div>
+</div>

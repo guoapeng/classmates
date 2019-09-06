@@ -1,0 +1,39 @@
+<div class="container" ng-controller="UserCtrl">
+    <div class="d-flex justify-content-center h-100">
+        <div class="card">
+            <div class="card-header">
+                <h3>欢迎来到校友登记系统!</h3>
+            </div>
+            <div class="card-body">
+                <form name="form" ng-submit="login(user)" role="form">
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="用户名">
+                    </div>
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+                        </div>
+                        <input type="password" class="form-control" placeholder="密码">
+                    </div>
+                    <div class="row align-items-center remember">
+                        <input type="checkbox">记住我
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" ng-click="login(user);" value="登录" class="btn float-right login_btn">
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-center links">
+                    没有账号?<a ng-click="signup()" >注册</a>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <a ng-click="forgotPwd()">忘记密码?</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
