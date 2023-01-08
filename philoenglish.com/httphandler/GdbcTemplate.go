@@ -3,19 +3,20 @@ package handlers
 import (
 	"database/sql"
 	"errors"
-	"github.com/guoapeng/props"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"time"
+
+	propsReader "github.com/guoapeng/props"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 const (
-	DRIVERNAME = "DRIVERNAME"
+	DRIVERNAME     = "DRIVERNAME"
 	DATASOURCENAME = "DATASOURCENAME"
 )
 
 type DataSource struct {
-	DriverName string
+	DriverName     string
 	DataSourceName string
 }
 
@@ -33,7 +34,8 @@ func (ds *DataSource) open() (*sql.DB, error) {
 }
 
 func NewDataSource() *DataSource {
-	if appConf, err := propsReader.New(); err == nil {
+
+	if appConf, err := propsReader.NewFactory("classmates", "config.properties").New(); err == nil {
 		return &DataSource{DriverName: appConf.Get(DRIVERNAME), DataSourceName: appConf.Get(DATASOURCENAME)}
 	} else {
 		panic("failed to create data source during reading properties")
@@ -42,14 +44,14 @@ func NewDataSource() *DataSource {
 
 func (template *GdbcTemplate) Insert(sql string, args ...interface{}) (sql.Result, error) {
 	if db, err := template.datasource.open(); err == nil {
-		result,err:=db.Exec(sql, args...)
+		result, err := db.Exec(sql, args...)
 		return result, err
 	} else {
 		return nil, errors.New("failed to open db!")
-}
+	}
 
 }
-func (template *GdbcTemplate) QueryOne(sql string, args ...interface{}) (func(dest ...interface{}) (error)) {
+func (template *GdbcTemplate) QueryOne(sql string, args ...interface{}) func(dest ...interface{}) error {
 	if db, err := template.datasource.open(); err == nil {
 		defer db.Close()
 		queryStmt, err := db.Prepare(sql)
@@ -57,7 +59,7 @@ func (template *GdbcTemplate) QueryOne(sql string, args ...interface{}) (func(de
 			log.Fatal(err)
 		}
 		row := queryStmt.QueryRow(args...)
-		return func(dest ...interface{}) (error) {
+		return func(dest ...interface{}) error {
 			if err := row.Scan(dest...); err != nil {
 				log.Printf("scan failed, err:%v \n", err)
 				return err
@@ -66,7 +68,7 @@ func (template *GdbcTemplate) QueryOne(sql string, args ...interface{}) (func(de
 			}
 		}
 	} else {
-		return func(dest ...interface{}) (error) {
+		return func(dest ...interface{}) error {
 			log.Printf("Open mysql failed,err:%v\n", err)
 			return err
 		}
